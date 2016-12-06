@@ -18,7 +18,7 @@ export default class Project extends Component {
           <h3>Project: {project.getDirectoryName()}</h3>
           <ul>
             {project.get('files').map(item =>
-              <File item={item} />
+              <File key={item.get('fileName')} item={item} />
             )}
           </ul>
         </div>

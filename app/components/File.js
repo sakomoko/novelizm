@@ -10,14 +10,38 @@ import {
   blue300, cyanA700
 } from 'material-ui/styles/colors';
 
+type State = {
+  animated: boolean
+};
+
+type Props = {
+  item: TextFileRecord
+};
+
 export default class Project extends Component {
+  elem: Element;
+  state: State = {animated: false};
+
   static propTypes = {
     item: PropTypes.instanceOf(TextFileRecord).isRequired
   }
 
-  getChangedClass(item: TextFileRecord): string {
+  componentWillReceiveProps(nextProps: Props) {
+    const { item } = nextProps;
     if (item.get('isChange')) {
-      return 'animated pulse';
+      this.setState({animated: true});
+    }
+  }
+
+  componentDidMount() {
+    this.elem.addEventListener('animationend', () => {
+      this.setState({animated: false});
+    });
+  }
+
+  getChangedClass(): string {
+    if (this.state.animated) {
+      return 'animated flash';
     }
     return '';
   }
@@ -25,8 +49,8 @@ export default class Project extends Component {
   render() {
     const { item } = this.props;
     return (
-      <li className={styles.list} key={item.get('fileName')}>
-        <Card className={this.getChangedClass(item)}>
+      <li ref={(elm) => {this.elem = elm}} className={`${styles.list} ${this.getChangedClass()}`}>
+        <Card>
           <CardHeader
             avatar={<Avatar icon={<Description />} backgroundColor={blue300} />}
             title={item.get('fileName')}
