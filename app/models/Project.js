@@ -1,5 +1,6 @@
 // @flow
 import { Record, List } from 'immutable';
+import path from 'path';
 
 const ProjectRecord = Record({
   directoryPath: '',
@@ -7,6 +8,11 @@ const ProjectRecord = Record({
 });
 
 export default class Project extends ProjectRecord {
+
+  getDirectoryName(): string {
+    return path.basename(this.directoryPath);
+  }
+
   changeFile(fileName: string): Project {
     const index: number = this.files.findIndex((item) => item.get('fileName') === fileName);
     return this.set('files', this.files.update(index, (item) => item.parse()));

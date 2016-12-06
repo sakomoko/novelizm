@@ -15,7 +15,7 @@ export default class Project extends Component {
     return (
       <div>
         <div className={styles.container}>
-          <h3>Project: {project.get('directoryPath')}</h3>
+          <h3>Project: {project.getDirectoryName()}</h3>
           <ul>
             {project.get('files').map(item =>
               <File item={item} />
