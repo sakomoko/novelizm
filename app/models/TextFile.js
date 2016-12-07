@@ -17,6 +17,24 @@ const TextFileRecord = Record({
   updateDate: ''
 });
 
+function getDifferenceString(number: number): string {
+  if (number === 0) {
+    return '';
+  } else if (number > 0) {
+    return ` (+${number}) `;
+  } else {
+    return ` (${number}) `;
+  }
+}
+
+function getDifferenceNumber(currentNumber: number, newNumber: number): number {
+  if (currentNumber > newNumber) {
+    return -(currentNumber - newNumber);
+  } else {
+    return newNumber - currentNumber;
+  }
+}
+
 export default class TextFile extends TextFileRecord {
   parse(): TextFile {
     const stat = fs.statSync(this.directoryPath + '/' + this.fileName);
@@ -44,42 +62,19 @@ export default class TextFile extends TextFileRecord {
   }
 
   calculateDifferencePage(newPage: number): number {
-    const currentPage: number = this.get('page');
-    if (currentPage > newPage) {
-      return -(currentPage - newPage);
-    } else {
-      return newPage - currentPage;
-    }
+    return getDifferenceNumber(this.get('page'), newPage);
   }
 
   calculateDifferenceLength(newLength: number): number {
-    const currentLength: number = this.get('length')
-    if (currentLength > newLength) {
-      return -(currentLength - newLength);
-    } else {
-      return newLength - currentLength;
-    }
+    return getDifferenceNumber(this.get('length'), newLength);
   }
 
   getDifferencePageString(): string {
-    const page = this.get('differencePage');
-    if (page === 0) {
-      return '';
-    } else if (page > 0) {
-      return ` (+${page}) `;
-    } else {
-      return ` (${page}) `;
-    }
+    return getDifferenceString(this.get('differencePage'));
+
   }
 
   getDifferenceLengthString(): string {
-    const number = this.get('differenceLength');
-    if (number === 0) {
-      return '';
-    } else if (number > 0) {
-      return ` (+${number}) `;
-    } else {
-      return ` (${number}) `;
-    }
+    return getDifferenceString(this.get('differenceLength'));
   }
 }
