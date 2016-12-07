@@ -16,7 +16,7 @@ describe('TextFileRecord', () => {
       assert(file instanceof TextFileRecord);
     });
     it('更新日時を文字列で取得できる', () => {
-      assert(file.updateDate === '2016-12-07T03:30:51+09:00');
+      assert(typeof(file.updateDate) === 'string');
     });
   });
 });
