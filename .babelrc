@@ -11,6 +11,7 @@
     },
     "test": {
       "plugins": [
+				"babel-plugin-espower",
         ["webpack-loaders", { "config": "webpack.config.test.js", "verbose": false }]
       ]
     }

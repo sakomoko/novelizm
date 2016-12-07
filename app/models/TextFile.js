@@ -2,6 +2,7 @@
 import { Record } from 'immutable';
 import fs from 'fs';
 import TextParser from '../utils/TextParser';
+import moment from 'moment';
 
 const TextFileRecord = Record({
   directoryPath: '',
@@ -12,12 +13,15 @@ const TextFileRecord = Record({
   charAt: 0,
   differencePage: 0,
   differenceLength: 0,
-  isChange: false
+  isChange: false,
+  updateDate: ''
 });
 
 export default class TextFile extends TextFileRecord {
   parse(): TextFile {
-    const body:string = fs.readFileSync(this.directoryPath + '/' + this.fileName, 'utf-8');
+    const stat = fs.statSync(this.directoryPath + '/' + this.fileName);
+    const updateDate: Date = stat.mtime;
+    const body: string = fs.readFileSync(this.directoryPath + '/' + this.fileName, 'utf-8');
     const parsedText: TextParser = new TextParser(body);
     const result: Object = parsedText.toObject();
     return this.withMutations(map => {
@@ -30,7 +34,8 @@ export default class TextFile extends TextFileRecord {
       newRecord.set('page', result.page)
       .set('overLine', result.line)
       .set('charAt', result.charAt)
-      .set('length', result.length);
+      .set('length', result.length)
+      .set('updateDate', moment(updateDate).format());
     })
   }
 

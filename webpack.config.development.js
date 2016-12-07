@@ -78,6 +78,7 @@ export default validate(merge(baseConfig, {
     }),
 
     new webpack.ExternalsPlugin('commonjs', [
+      'electron',
       'fs',
       'chokidar'
     ])
