@@ -5,8 +5,18 @@ import path from 'path';
 import chokidar from 'chokidar';
 import TextFile from '../models/TextFile';
 import Project from '../models/Project';
+import Progress from '../models/Progress';
 
 type EventType = 'change' | 'add' | 'remove';
+
+function isExistFile(file) {
+  try {
+    fs.statSync(file);
+    return true
+  } catch(err) {
+    if(err.code === 'ENOENT') return false
+  }
+}
 
 export default class DirectoryManager {
   directoryPath: string;
@@ -14,24 +24,51 @@ export default class DirectoryManager {
   files: Array<TextFile>;
   listener: Object;
   project: Project;
+  tracker: ?Object;
 
   constructor(directoryPath: string) {
     this.directoryPath = directoryPath;
     this.files = [];
     this.listener = {};
     this.fileNames = this.searchFiles();
+    this.tracker = this.getProjectTracker();
+
     this.fileNames.forEach((fileName) => {
+      const progress = this.getFileProgress(fileName);
       const file = new TextFile({
         directoryPath: this.directoryPath,
         fileName: fileName
       });
-      this.files.push(file.parse())
+      this.files.push(file.parse(progress));
     })
     this.project = new Project({
       directoryPath: this.directoryPath,
       files: List(this.getFileRecords())
     });
+    this.saveTrackerFile();
     this.watchFiles();
+  }
+
+  saveTrackerFile() {
+    const tracker = new Progress(this.project);
+    fs.writeFileSync(this.directoryPath + '/novelizm.json', tracker.toJSONString());
+  }
+
+  getProjectTracker() {
+    const filePath = this.directoryPath + '/' + 'novelizm.json';
+    if (isExistFile(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    }
+    return null;
+  }
+
+  getFileProgress(fileName: string) {
+    if (this.tracker) {
+      return this.tracker.files.find((value) => {
+        return value.fileName === fileName
+      });
+    }
+    return null;
   }
 
   searchFiles(): Array<string> {
@@ -42,6 +79,7 @@ export default class DirectoryManager {
   changeFile(filePath: string): void {
     const project: Project = this.getProjectRecord();
     this.project = project.changeFile(path.basename(filePath));
+    this.saveTrackerFile();
     this.listener['change'](this.project);
   }
 

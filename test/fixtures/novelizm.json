@@ -1,24 +1,14 @@
 {
   "files": [{
     "fileName": "test1.txt",
-    "today": {
-      "date": "2016-12-07T03:30:51+09:00",
-      "page": 0,
-      "length": 98
-    },
-    "previous": [{
+    "history": [{
       "date": "2016-12-07T03:30:51+09:00",
       "page": 0,
       "length": 98
     }]
   }, {
     "fileName": "test2.txt",
-    "today": {
-      "date": "2016-12-07T03:35:34+09:00",
-      "page": 26,
-      "length": 9257
-    },
-    "previous": [{
+    "history": [{
       "date": "2016-12-07T03:35:34+09:00",
       "page": 26,
       "length": 9257

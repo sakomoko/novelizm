@@ -7,10 +7,9 @@ const fields = {
   files: List()
 };
 
-type FileDetail = {
+export type FileDetail = {
   fileName: string,
-  today: History,
-  previous: List<History>
+  history: List<History>
 };
 
 type History = {
@@ -25,16 +24,9 @@ type FileList = List<FileDetail>;
 function initialize(project: Project): FileList {
   let fileList = new List();
   project.files.forEach((item: TextFile) => {
-    const history: History = {
-      date: item.get('updateDate'),
-      page: item.get('page'),
-      line: item.get('line'),
-      length: item.get('length')
-    };
     const detail: FileDetail = {
       fileName: item.fileName,
-      today: history,
-      previous: List([history])
+      history: List(item.get('history'))
     };
     fileList = fileList.push(detail);
   });
