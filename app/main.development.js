@@ -1,4 +1,6 @@
-import { app, BrowserWindow, Menu, shell } from 'electron';
+import { app, BrowserWindow, Menu, shell, Tray, screen } from 'electron';
+import path from 'path';
+import Positioner from 'electron-positioner';
 
 let menu;
 let template;
@@ -38,19 +40,37 @@ const installExtensions = async () => {
   }
 };
 
+const isDarwin = (process.platform === 'darwin');
+const isLinux = (process.platform === 'linux');
+const isWindows = (process.platform === 'win32');
+
 app.on('ready', async () => {
   await installExtensions();
 
+  const appIcon = new Tray(path.resolve(__dirname, '..', 'resources/pen.png'));
+  const windowPosition = (isWindows) ? 'trayBottomCenter' : 'trayCenter';
+  var cachedBounds;
+
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728
+    width: 400,
+    height: 400,
+    frame: false,
+    resizable: false,
+    webPreferences: {
+      overlayScrollbars: true
+    }
   });
+
+  appIcon.window = mainWindow;
+  appIcon.positioner = new Positioner(appIcon.window);
+  // appIcon.window.on('blur', hideWindow);
+  appIcon.window.setVisibleOnAllWorkspaces(true);
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.show();
+    showWindow(cachedBounds);
     mainWindow.focus();
   });
 
@@ -70,6 +90,61 @@ app.on('ready', async () => {
         }
       }]).popup(mainWindow);
     });
+
+    mainWindow.webContents.on('devtools-opened', () => {
+      mainWindow.setSize(800, 600);
+      mainWindow.setResizable(true);
+    });
+    mainWindow.webContents.on('devtools-closed', () => {
+      mainWindow.setSize(400, 400);
+      mainWindow.setResizable(false);
+    });
+  }
+
+
+  function showWindow (trayPos) {
+    var noBoundsPosition;
+    if (!isDarwin && trayPos !== undefined) {
+      var displaySize = screen.getPrimaryDisplay().workAreaSize;
+      var trayPosX = trayPos.x;
+      var trayPosY = trayPos.y;
+
+      if (isLinux) {
+        var cursorPointer = screen.getCursorScreenPoint();
+        trayPosX = cursorPointer.x;
+        trayPosY = cursorPointer.y;
+      }
+
+      var x = (trayPosX < (displaySize.width / 2)) ? 'left' : 'right';
+      var y = (trayPosY < (displaySize.height / 2)) ? 'top' : 'bottom';
+
+      if (x === 'right' && y === 'bottom') {
+        noBoundsPosition = (isWindows) ? 'trayBottomCenter' : 'bottomRight';
+      } else if (x === 'left' && y === 'bottom') {
+        noBoundsPosition = 'bottomLeft';
+      } else if (y === 'top') {
+        noBoundsPosition = (isWindows) ? 'trayCenter' : 'topRight';
+      }
+    } else if (trayPos === undefined) {
+      noBoundsPosition = (isWindows) ? 'bottomRight' : 'topRight';
+    }
+
+    var position = appIcon.positioner.calculate(noBoundsPosition || windowPosition, trayPos);
+    appIcon.window.setPosition(position.x, position.y);
+    appIcon.window.show();
+  }
+
+  appIcon.on('click', function (e, bounds) {
+    if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey) { return hideWindow(); }
+    if (appIcon.window && appIcon.window.isVisible()) { return hideWindow(); }
+    bounds = bounds || cachedBounds;
+    cachedBounds = bounds;
+    showWindow(cachedBounds);
+  });
+
+  function hideWindow () {
+    if (!appIcon.window) { return; }
+    appIcon.window.hide();
   }
 
   if (process.platform === 'darwin') {

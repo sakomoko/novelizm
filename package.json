@@ -153,6 +153,7 @@
   "dependencies": {
     "chokidar": "^1.6.1",
     "electron-debug": "^1.1.0",
+    "electron-positioner": "^3.0.0",
     "font-awesome": "^4.7.0",
     "immutable": "^3.8.1",
     "material-ui": "^0.16.4",
@@ -165,6 +166,7 @@
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
+    "ress": "^1.1.2",
     "source-map-support": "^0.4.6"
   },
   "devEngines": {
