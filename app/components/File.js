@@ -4,7 +4,6 @@ import Avatar from 'material-ui/Avatar';
 import { Card, CardHeader } from 'material-ui/Card';
 import Description from 'material-ui/svg-icons/action/description';
 import TextFileRecord from '../models/TextFile';
-import styles from './Project.css';
 
 import {
   blue300, cyanA700
@@ -49,7 +48,7 @@ export default class Project extends Component {
   render() {
     const { item } = this.props;
     return (
-      <li ref={(elm) => {this.elem = elm}} className={`${styles.list} ${this.getChangedClass()}`}>
+      <li ref={(elm) => {this.elem = elm}} className={`${this.getChangedClass()}`}>
         <Card>
           <CardHeader
             avatar={<Avatar icon={<Description />} backgroundColor={blue300} />}
