@@ -53,7 +53,7 @@ export default class Project extends Component {
           <CardHeader
             avatar={<Avatar icon={<Description />} backgroundColor={blue300} />}
             title={item.get('fileName')}
-            subtitle={<span><span style={{color: cyanA700}}>{item.get('page')}</span><span>{item.getDifferencePageOfToday()}</span>{` pages, ${item.get('overLine')} line; Total ${item.get('length').toLocaleString()}${item.getDifferenceLengthOfToday()} char.`}</span>}
+            subtitle={<span><span style={{color: cyanA700}}>{item.get('page')}</span><span>{item.getDifferencePageOfToday()}</span>{` page, ${item.get('overLine')} line; ${item.get('length').toLocaleString()}${item.getDifferenceLengthOfToday()} char.`}</span>}
             titleStyle={{fontSize: '18px', marginBottom: '8px'}}
           />
         </Card>

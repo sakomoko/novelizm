@@ -79,6 +79,12 @@ export default class DirectoryManager {
   changeFile(filePath: string): void {
     const project: Project = this.getProjectRecord();
     this.project = project.changeFile(path.basename(filePath));
+    const latest = project.getLatestFile();
+    const notify = new window.Notification(`${latest.get('fileName')} has changed.`, {
+      body: `${latest.page} ${latest.getDifferencePageOfToday()} page / ${latest.length} ${latest.getDifferenceLengthOfToday()} char.`,
+      silent: true
+    });
+    setTimeout(notify.close.bind(notify), 4000);
     this.saveTrackerFile();
     this.listener['change'](this.project);
   }
