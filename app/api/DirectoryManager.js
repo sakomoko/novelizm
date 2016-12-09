@@ -6,6 +6,7 @@ import chokidar from 'chokidar';
 import TextFile from '../models/TextFile';
 import Project from '../models/Project';
 import Progress from '../models/Progress';
+import { ipcRenderer } from 'electron';
 
 type EventType = 'change' | 'add' | 'remove';
 
@@ -85,6 +86,8 @@ export default class DirectoryManager {
       silent: true
     });
     setTimeout(notify.close.bind(notify), 4000);
+    ipcRenderer.send('change-file',
+      `${latest.get('page')}/${latest.get('length').toLocaleString()}`);
     this.saveTrackerFile();
     this.listener['change'](this.project);
   }

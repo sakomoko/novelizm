@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, shell, Tray, screen } from 'electron';
+import { app, BrowserWindow, Menu, shell, Tray, screen, ipcMain } from 'electron';
 import path from 'path';
 import Positioner from 'electron-positioner';
 
@@ -146,6 +146,10 @@ app.on('ready', async () => {
     if (!appIcon.window) { return; }
     appIcon.window.hide();
   }
+
+  ipcMain.on('change-file', (event, arg) => {
+    appIcon.setTitle(arg);
+  });
 
   if (process.platform === 'darwin') {
     template = [{
