@@ -27,7 +27,7 @@ export default class TextParser {
       page: this.page,
       line: this.line,
       charAt: this.charAt,
-      length: this.body.length
+      length: this.body.replace(/[\r\n]/g, '').length
     }
   }
 
