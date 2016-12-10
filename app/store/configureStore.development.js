@@ -4,6 +4,10 @@ import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
 import createLogger from 'redux-logger';
 import rootReducer from '../reducers';
+import { persistStore, autoRehydrate } from 'redux-persist';
+import immutableTransform from 'redux-persist-transform-immutable';
+import Setting from '../models/Setting';
+import notification from '../middleware/notification';
 
 import * as counterActions from '../actions/counter';
 
@@ -29,11 +33,12 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
   compose;
 /* eslint-enable no-underscore-dangle */
 const enhancer = composeEnhancers(
-  applyMiddleware(thunk, router, logger)
+  applyMiddleware(thunk, notification, router, logger), autoRehydrate()
 );
 
 export default function configureStore(initialState: Object) {
   const store = createStore(rootReducer, initialState, enhancer);
+  persistStore(store, {whitelist:['setting'], transforms: [immutableTransform({records: [Setting]})]});
 
   if (module.hot) {
     module.hot.accept('../reducers', () =>
