@@ -1,13 +1,13 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "electron-react-boilerplate",
-  "version": "1.0.0",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "name": "novelizm",
+  "productName": "novelizm",
+  "version": "0.1.0",
+  "description": "小説執筆支援のため、テキストの原稿用紙換算枚数を通知します",
   "main": "./main.js",
   "author": {
-    "name": "C. T. Lin",
-    "email": "chentsulin@gmail.com",
-    "url": "https://github.com/chentsulin"
+    "name": "sakomoko",
+    "email": "sakomoko@gmail.com",
+    "url": "https://github.com/sakomoko"
   },
   "license": "MIT",
   "dependencies": {

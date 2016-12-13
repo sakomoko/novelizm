@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu, shell, Tray, screen, ipcMain } from 'electron';
-import path from 'path';
 import Positioner from 'electron-positioner';
+
+const iconPath = `${__dirname}/pen.png`;
 
 let menu;
 let template;
@@ -46,9 +47,8 @@ const isWindows = (process.platform === 'win32');
 
 app.on('ready', async () => {
   await installExtensions();
-
-  const appIcon = new Tray(path.resolve(__dirname, '..', 'resources/pen.png'));
   const windowPosition = (isWindows) ? 'trayBottomCenter' : 'trayCenter';
+  const appIcon = new Tray(iconPath);
   var cachedBounds;
 
   mainWindow = new BrowserWindow({
@@ -56,26 +56,23 @@ app.on('ready', async () => {
     width: 400,
     height: 400,
     frame: false,
-    resizable: false,
-    webPreferences: {
-      overlayScrollbars: true
-    }
+    resizable: false
   });
 
+  appIcon.positioner = new Positioner(mainWindow);
+  mainWindow.loadURL(`file://${__dirname}/app.html`);
+
   appIcon.window = mainWindow;
-  appIcon.positioner = new Positioner(appIcon.window);
   // appIcon.window.on('blur', hideWindow);
   appIcon.window.setVisibleOnAllWorkspaces(true);
 
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 
   mainWindow.webContents.on('did-finish-load', () => {
     showWindow(cachedBounds);
     mainWindow.focus();
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
   });
 
   if (process.env.NODE_ENV === 'development') {

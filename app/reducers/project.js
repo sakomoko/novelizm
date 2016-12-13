@@ -1,5 +1,5 @@
 // @flow
-import { SET_DIRECTORY, UPDATE_PROJECT } from '../actions/home';
+import { SET_DIRECTORY, UPDATE_PROJECT } from '../actions/project';
 import Project from '../models/Project'
 
 const defaltProject = new Project({});

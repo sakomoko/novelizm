@@ -45,6 +45,7 @@
       "dist/",
       "node_modules/",
       "app.html",
+      "pen.png",
       "main.js",
       "main.js.map",
       "package.json"
