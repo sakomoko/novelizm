@@ -1,4 +1,4 @@
-import { UPDATE_PROJECT } from '../actions/home';
+import { UPDATE_PROJECT } from '../actions/project';
 import Notification from '../utils/Notification';
 
 export default store => next => action => {

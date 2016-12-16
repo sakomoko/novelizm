@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Setting from '../components/Setting';
-import * as SettingActions from '../actions/project';
+import * as SettingActions from '../actions/setting';
 
 class SettingPage extends Component {
   render() {
