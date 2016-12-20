@@ -1,0 +1,11 @@
+.detail {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.detail div:last-child {
+  margin-left: auto;
+}
+
+.updated {
+}

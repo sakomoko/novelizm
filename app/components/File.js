@@ -5,6 +5,8 @@ import { Card, CardHeader } from 'material-ui/Card';
 import Description from 'material-ui/svg-icons/action/description';
 import TextFileRecord from '../models/TextFile';
 
+import styles from './File.css';
+
 import {
   blue300, cyanA700
 } from 'material-ui/styles/colors';
@@ -51,13 +53,27 @@ export default class Project extends Component {
       <li ref={(elm) => {this.elem = elm}} className={`${this.getChangedClass()}`}>
         <Card>
           <CardHeader
+            style={{width:'100%'}}
             avatar={<Avatar icon={<Description />} backgroundColor={blue300} />}
-            title={item.get('fileName')}
-            subtitle={<span><span style={{color: cyanA700}}>{item.get('page')}</span><span>{item.getDifferencePageOfToday()}</span>{` page, ${item.get('overLine')} line; ${item.get('length').toLocaleString()}${item.getDifferenceLengthOfToday()} char.`}</span>}
-            titleStyle={{fontSize: '18px', marginBottom: '8px'}}
+            title={<div><span>{item.get('fileName')}</span></div>}
+            subtitle={<Detail item={item} />}
+            titleStyle={{width:'100%', fontSize: '18px', marginBottom: '8px'}}
           />
         </Card>
       </li>
     );
   }
 }
+
+const Detail = ({ item }) => (
+  <div className={styles.detail}>
+    <div>
+      <span style={{color: cyanA700}}>{item.get('page')}</span>
+      <span>{item.getDifferencePageOfToday()}</span>
+      {` page, ${item.get('overLine')} line; ${item.get('length').toLocaleString()}${item.getDifferenceLengthOfToday()} char.`}
+    </div>
+  </div>
+);
+Detail.propTypes = {
+  item: PropTypes.instanceOf(TextFileRecord).isRequired
+};

@@ -12,12 +12,13 @@ export default class Project extends Component {
 
   render() {
     const { project } = this.props;
+    const files = project.get('files').sortBy(item => item.updateDate).reverse();
     return (
       <div>
         <div className={styles.container}>
           <Subheader>Project: {project.getDirectoryName()}</Subheader>
           <ul>
-            {project.get('files').map(item =>
+            {files.map(item =>
               <File key={item.get('fileName')} item={item} />
             )}
           </ul>

@@ -5,6 +5,8 @@ import TextParser from '../utils/TextParser';
 import moment from 'moment';
 import type FileDetail from './Progress';
 
+moment.locale('ja');
+
 const TextFileRecord = Record({
   directoryPath: '',
   fileName: '',
@@ -111,5 +113,9 @@ export default class TextFile extends TextFileRecord {
 
   getDifferenceLengthOfToday(): string {
     return getDifferenceString(getDifferenceNumber(this.get('history').first().length, this.get('length')));
+  }
+
+  getUpdateString(): string {
+    return moment(this.get('updateDate')).format('YYYY/MM/DD HH:mm:ss');
   }
 }
